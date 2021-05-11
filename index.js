@@ -8,6 +8,7 @@ const session = require("express-session");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "src")));
 app.use(express.json());
+
 app.use(
   session({
     secret: "cursoNode",
@@ -16,6 +17,8 @@ app.use(
   })
 );
 app.use(flash());
+
+require("./Middleware/cors")(app);
 require("./Middleware/flash")(app);
 require("./Middleware/cors")(app);
 require("./Routers/router")(app);

@@ -24,29 +24,24 @@ router.get("/vizualizar/:_id", async (req, res) => {
 });
 
 router.get("/listar", async (req, res) => {
-  await User.find({})
-    .lean()
-    .then((users) => {
-      res.json({ users });
-    });
+  const users = await User.find({}).lean();
+  res.json({ users });
 });
 
 router.put("/editar", async (req, res) => {
   const { body = {} } = req;
-  const { name, email, password, zip, city, state } = body;
+  const { name, email, password } = body;
   try {
     await User.findOneAndUpdate({
       name,
       email,
-      password
-    })
-      .lean()
-      .then(() => {
-        return res.json({
-          error: false,
-          message: "Altered success",
-        });
-      });
+      password,
+    }).lean();
+
+    return res.json({
+      error: false,
+      message: "Altered success",
+    });
   } catch (err) {
     return res.status(400).json({
       error: true,
@@ -64,7 +59,7 @@ router.post("/cadastrar", async (req, res) => {
       email,
       password,
     });
-    
+
     const hash = bcrypt.hashSync(user.password, 10);
     user.password = hash;
     await user.save();
